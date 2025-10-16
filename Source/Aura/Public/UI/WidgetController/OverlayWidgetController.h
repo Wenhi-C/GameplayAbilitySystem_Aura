@@ -55,10 +55,19 @@ public:
 	FOnMaxManaChangeSignature OnMaxManaChange;
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Widget Data")
-	TObjectPtr<UDataTable> MessageDataTable;
+	TObjectPtr<UDataTable> MessageWidgetDataTable;
 	void HealthChange(const FOnAttributeChangeData& Data) const;
 	void MaxHealthChange(const FOnAttributeChangeData& Data) const;
 	void ManaChange(const FOnAttributeChangeData& Data) const;
 	void MaxManaChange(const FOnAttributeChangeData& Data) const;
+
+	template<typename  T>
+	T* GetDataTableRowByTag(UDataTable* DataTable, const FGameplayTag& Tag);
 	
 };
+
+template <typename T>
+T* UOverlayWidgetController::GetDataTableRowByTag(UDataTable* DataTable, const FGameplayTag& Tag)
+{
+	return DataTable->FindRow<T>(Tag.GetTagName(), TEXT(""));
+}
