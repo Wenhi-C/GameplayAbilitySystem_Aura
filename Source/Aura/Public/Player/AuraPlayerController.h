@@ -33,6 +33,6 @@ private:
 	void Move(const FInputActionValue& InputActionValue);
 
 	void Cursortrace();
-	TObjectPtr<IEnemyInterface> LastActor;
-	TObjectPtr<IEnemyInterface> ThisActor;
+	IEnemyInterface* LastActor;
+	IEnemyInterface* ThisActor;
 };
