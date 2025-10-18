@@ -14,5 +14,5 @@
   6. **CriticalHitDamage** = ArmorPenetration * 1.5 + 10
   7. **HealthGeneration** = Vigor * 0.1 + 1
   8. **ManaGeneration** = Intelligence * 0.1 + 1
-  9. **MaxHealth** = Vigor * 2.5 + 80
-  10. **MaxMana** = Intelligence * 2 + 50
+  9. **MaxHealth** = Vigor * 2.5 + 80 + Level * 10
+  10. **MaxMana** = Intelligence * 2.5 + 50 + Level * 15
