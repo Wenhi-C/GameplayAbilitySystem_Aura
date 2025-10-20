@@ -1,7 +1,7 @@
 ### GameplayAbilitySystem
-1.  ![alt text](TF]EBWM]}SVZ()}[SXR5JV5.png)
+![alt text](InitAbilityActorInfo.png)
 ### Attributes
-- ![alt text](image.png)
+- ![alt text](DerivedAtttibutes.png)
 - Primary Attributes
   1. **Strength**
   2. **Intelligence**
@@ -18,3 +18,9 @@
   8. **ManaGeneration** = Intelligence * 0.1 + 1
   9. **MaxHealth** = Vigor * 2.5 + 80 + Level * 10
   10. **MaxMana** = Intelligence * 2.5 + 50 + Level * 15
+
+### GameplayAbilities
+- Initialize GA
+- ![alt text](InstancingPolicy.PNG)
+- ![alt text](NetExecutionPolicy.PNG)
+- ![alt text](GameplayAbilityThingsNotToUse.PNG)
