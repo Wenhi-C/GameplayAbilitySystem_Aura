@@ -46,7 +46,7 @@ void AAuraPlayerController::AutoRun()
 void AAuraPlayerController::CursorTrace()
 {
 	
-	 GetHitResultUnderCursor(ECC_Visibility, false,  CursorHit);
+	GetHitResultUnderCursor(ECC_Visibility, false,  CursorHit);
 	if (!CursorHit.bBlockingHit) return;
 	LastActor = ThisActor;
 	ThisActor = Cast<IEnemyInterface>(CursorHit.GetActor());
