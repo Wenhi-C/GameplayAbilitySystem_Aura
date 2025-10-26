@@ -84,9 +84,7 @@ void AAuraEnemy::BeginPlay()
 		{
 			OnMaxHealthChange.Broadcast(Data.NewValue);
 		});
-
-	AuraAttributeSet->SetHealth(80.f);
-	AuraAttributeSet->SetMaxHealth(100.f);
+	
 	OnHealthChange.Broadcast(AuraAttributeSet->GetHealth());
 	OnMaxHealthChange.Broadcast(AuraAttributeSet->GetMaxHealth());
 }
@@ -95,9 +93,6 @@ void AAuraEnemy::InitAbilityActorInfo()
 {
 	AbilitySystemComponent->InitAbilityActorInfo(this, this);
 	Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent)->AbilityActorInfoSet();
-
-	
-	UAuraAttributeSet* AuraAttributeSet = Cast<UAuraAttributeSet>(AttributeSet);
-	
+	InitializeDefaultAttributes();
 	
 }
