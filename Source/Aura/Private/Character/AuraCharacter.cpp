@@ -49,6 +49,8 @@ int32 AAuraCharacter::GetPlayerLevel()
 	return AuraPlayerState->GetPlayerLevel();
 }
 
+
+
 // 初始化能力角色信息
 void AAuraCharacter::InitAbilityActorInfo()
 {
