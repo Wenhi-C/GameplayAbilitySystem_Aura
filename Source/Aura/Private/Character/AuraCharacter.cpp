@@ -23,38 +23,44 @@ AAuraCharacter::AAuraCharacter()
 	bUseControllerRotationRoll = false;
 }
 
+// Init Ability actor info for the Server
 void AAuraCharacter::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
-
-	// Init Ability actor info for the Server
+	
 	InitAbilityActorInfo();
+
+	// 添加角色初始能力，只需要在服务器端执行
 	AddCharacterAbilities();
 }
 
+// Init Ability actor info for the Client
 void AAuraCharacter::OnRep_PlayerState()
 {
 	Super::OnRep_PlayerState();
-
-	// Init Ability actor info for the Client
+	
 	InitAbilityActorInfo();
 }
 
 int32 AAuraCharacter::GetPlayerLevel()
 {
-	const AAuraPlayerState* AuraPlayerState =Cast<AAuraPlayerState>(GetPlayerState());
+	const AAuraPlayerState* AuraPlayerState = Cast<AAuraPlayerState>(GetPlayerState());
 	check(AuraPlayerState);
 	return AuraPlayerState->GetPlayerLevel();
 }
 
+// 初始化能力角色信息
 void AAuraCharacter::InitAbilityActorInfo()
 {
-	AAuraPlayerState* AuraPlayerState =Cast<AAuraPlayerState>(GetPlayerState());
+	AAuraPlayerState* AuraPlayerState = Cast<AAuraPlayerState>(GetPlayerState());
 	check(AuraPlayerState);
+	
 	AbilitySystemComponent = AuraPlayerState->GetAbilitySystemComponent();
-	AbilitySystemComponent->InitAbilityActorInfo(AuraPlayerState, this);
-	Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent)->AbilityActorInfoSet();
 	AttributeSet = AuraPlayerState->GetAttributeSet();
+	
+	AbilitySystemComponent->InitAbilityActorInfo(AuraPlayerState, this);
+	// 调用蓝图函数
+	Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent)->AbilityActorInfoSet();
 	
 	if (AAuraPlayerController* AuraPlayerController = Cast<AAuraPlayerController>(GetController()))
 	{

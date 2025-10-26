@@ -25,6 +25,7 @@ public:
 	// Combat Interface
 	virtual int32 GetPlayerLevel() override;
 	// End Combat Interface
+	
 protected:
 	virtual void BeginPlay() override;
 	virtual void InitAbilityActorInfo() override;

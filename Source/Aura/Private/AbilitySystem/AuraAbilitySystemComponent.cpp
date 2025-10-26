@@ -62,6 +62,7 @@ void UAuraAbilitySystemComponent::ClientEffectApplied_Implementation(UAbilitySys
 	FGameplayTagContainer TagContainer;
 	EffectSpec.GetAllAssetTags(TagContainer);
 
+	// 广播标签给 OverlayWidgetController
 	EffectAssetTags.Broadcast(TagContainer);
 	
 }

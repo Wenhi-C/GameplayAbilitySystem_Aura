@@ -8,7 +8,10 @@
 class AAuraPlayerState;
 
 /**
- * 
+ * 需要在蓝图中设置：
+ *	Weapon的资产
+ *	WeaponTipSocketName
+ *	StartupAbilities
  */
 UCLASS()
 class AURA_API AAuraCharacter : public AAuraCharacterBase
