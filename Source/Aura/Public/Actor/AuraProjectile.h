@@ -27,7 +27,6 @@ public:
 	FGameplayEffectSpecHandle DamageEffectSpecHandle;
 protected:
 	virtual void BeginPlay() override;
-
 	virtual void Destroyed() override;
 	
 	UFUNCTION()
