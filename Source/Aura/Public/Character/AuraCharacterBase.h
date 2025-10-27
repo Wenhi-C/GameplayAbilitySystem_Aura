@@ -12,6 +12,7 @@ class UGameplayAbility;
 class UGameplayEffect;
 class UAbilitySystemComponent;
 class UAttributeSet;
+class UAnimMontage;
 
 /*
  * 需要在蓝图中设置：
@@ -34,6 +35,8 @@ public:
 	
 	UAttributeSet* GetAttributeSet() const { return AttributeSet; };
 
+	virtual UAnimMontage* GetHitReactMontage_Implementation() override;
+	
 protected:
 	virtual void BeginPlay() override;
 
@@ -76,4 +79,6 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Abilities")
 	TArray<TSubclassOf<UGameplayAbility>> StartupAbilities;
 
+	UPROPERTY(EditAnywhere, Category = "Combat")
+	TObjectPtr<UAnimMontage> HitReactMontage;
 };
