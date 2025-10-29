@@ -46,7 +46,7 @@ UAttributeMenuWidgetController* UAuraAbilitySystemLibrary::GetAttributeMenuWidge
 void UAuraAbilitySystemLibrary::InitializeDefaultAttributes(const UObject* WorldContextObject, ECharacterClass CharacterClass, float Level, UAbilitySystemComponent* ASC)
 {
 	UCharacterClassInfo* CharacterClassInfo = GetCharacterClassInfo(WorldContextObject);
-	if (CharacterClassInfo) return; 
+	if (CharacterClassInfo == nullptr) return; 
 
 	AActor* AvatarActor = ASC->GetAvatarActor();
 	FGameplayEffectContextHandle EffectContextHandle = ASC->MakeEffectContext();
