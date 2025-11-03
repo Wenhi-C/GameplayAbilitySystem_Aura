@@ -1,6 +1,7 @@
 #include "AbilitySystem/ExecCalc/ExecCalc_Damage.h"
 
 #include "AbilitySystemComponent.h"
+#include "AuraAbilityTypes.h"
 #include "AuraGameplayTags.h"
 #include "AbilitySystem/AuraAttributeSet.h"
 #include "AbilitySystem/Data/CharacterClassInfo.h"
@@ -108,6 +109,15 @@ void UExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecuti
 	
 	const float EffectiveCriticalHitChance = SourceCriticalHitChance - TargetCriticalHitResistance * CriticalHitResistanceCoefficient;
 	const bool bCriticalHit = FMath::RandRange(0.f, 100.f) < EffectiveCriticalHitChance;
+
+	FGameplayEffectContextHandle EffectContextHandle = Spec.GetContext();
+	FGameplayEffectContext* Context = EffectContextHandle.Get();
+
+	// SetContext
+	FAuraGameplayEffectContext* AuraContext = static_cast<FAuraGameplayEffectContext*>(Context);
+	AuraContext->SetIsBlockHit(bBlock);
+	AuraContext->SetIsCriticalHit(bCriticalHit);
+	
 	// If Block, halve the damage
 	Damage = bBlock ? Damage / 2 : Damage;
 	
