@@ -4,6 +4,7 @@
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "AbilitySystem/AuraAttributeSet.h"
+#include "Kismet/GameplayStatics.h"
 
 AAuraCharacterBase::AAuraCharacterBase()
 {
@@ -37,6 +38,8 @@ void AAuraCharacterBase::Die()
 
 void AAuraCharacterBase::MulticastHandleDeath_Implementation()
 {
+	UGameplayStatics::PlaySoundAtLocation(this, DeadSound, GetActorLocation(), GetActorRotation());
+	
 	Weapon->SetSimulatePhysics(true);
 	Weapon->SetEnableGravity(true);
 	Weapon->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
@@ -62,11 +65,11 @@ FVector AAuraCharacterBase::GetCombatSocketLocation_Implementation(const FGamepl
 {
 	// TODO Return correct tag based on Montage
 	const FAuraGameplayTags& GameplayTags = FAuraGameplayTags::Get();
-	if (MontageTag.MatchesTagExact(GameplayTags.Montage_Attack_Weapon) && IsValid(Weapon))
+	if (MontageTag.MatchesTagExact(GameplayTags.CombatSocket_Weapon) && IsValid(Weapon))
 		return Weapon->GetSocketLocation(WeaponTipSocketName);
-	else if (MontageTag.MatchesTagExact(GameplayTags.Montage_Attack_RightHand))
+	else if (MontageTag.MatchesTagExact(GameplayTags.CombatSocket_RightHand))
 		return GetMesh()->GetSocketLocation(RightHandSocketName);
-	else if (MontageTag.MatchesTagExact(GameplayTags.Montage_Attack_LeftHand))
+	else if (MontageTag.MatchesTagExact(GameplayTags.CombatSocket_LeftHand))
 		return GetMesh()->GetSocketLocation(LeftHandSocketName);
 	return FVector::ZeroVector;
 }
@@ -74,6 +77,23 @@ FVector AAuraCharacterBase::GetCombatSocketLocation_Implementation(const FGamepl
 TArray<FTaggedMontage> AAuraCharacterBase::GetAttackMontage_Implementation()
 {
 	return AttackMontages;
+}
+
+UNiagaraSystem* AAuraCharacterBase::GetBloodEffect_Implementation()
+{
+	return BloodEffect;
+}
+
+FTaggedMontage AAuraCharacterBase::GetTagMontageByTag_Implementation(const FGameplayTag& MontageTag)
+{
+	for (FTaggedMontage TaggedMontage : AttackMontages)
+	{
+		if (TaggedMontage.MontageTag == MontageTag)
+		{
+			return TaggedMontage;
+		}
+	}
+	return FTaggedMontage();
 }
 
 bool AAuraCharacterBase::IsDead_Implementation() const
