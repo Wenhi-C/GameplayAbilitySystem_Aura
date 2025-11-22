@@ -127,6 +127,7 @@ protected:
 
 	// Minions
 
+	UPROPERTY(VisibleAnywhere)
 	int32 MinionCount = 0;
 private:
 	UPROPERTY(EditAnywhere, Category = "Abilities")
