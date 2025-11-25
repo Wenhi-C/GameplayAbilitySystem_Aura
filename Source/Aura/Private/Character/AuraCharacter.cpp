@@ -5,10 +5,11 @@
 
 #include "AbilitySystemComponent.h"
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
-#include "Animation/AnimNode_Inertialization.h"
+#include "Aura/AuraLogChannels.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Player/AuraPlayerController.h"
 #include "Player/AuraPlayerState.h"
+#include "AbilitySystem/Data/LevelUpInfo.h"
 #include "UI/HUD/AuraHUD.h"
 
 AAuraCharacter::AAuraCharacter()
@@ -34,6 +35,7 @@ void AAuraCharacter::PossessedBy(AController* NewController)
 
 	// 添加角色初始能力，只需要在服务器端执行
 	AddCharacterAbilities();
+	
 }
 
 // Init Ability actor info for the Client
