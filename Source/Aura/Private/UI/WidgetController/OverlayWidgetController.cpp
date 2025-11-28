@@ -43,10 +43,14 @@ void UOverlayWidgetController::BindCallbacksToDependencies()
 				float Percent = static_cast<float>(NewXP - PreLevelUpRequirement) / static_cast<float>(CurLevelUpRequirement - PreLevelUpRequirement);
 				OnXPPercentChangeDelegate.Broadcast(Percent);
 			}
-			
 		});
-	const UAuraAttributeSet* AuraAttributeSet = CastChecked<UAuraAttributeSet>(AttributeSet);
+	AuraPlayerState->OnLevelChangedDelegate.AddLambda(
+		[this](int32 NewLevel)
+		{
+			OnPlayerLevelChangeDelegate.Broadcast(NewLevel);
+		});
 	
+	const UAuraAttributeSet* AuraAttributeSet = CastChecked<UAuraAttributeSet>(AttributeSet);
 	
 	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(
 		AuraAttributeSet->GetHealthAttribute()).AddLambda(

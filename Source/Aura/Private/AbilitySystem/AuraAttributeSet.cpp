@@ -186,7 +186,6 @@ void UAuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 			const int32 NumLevelUps = NewLevel - CurrentLevel;
 			if (NumLevelUps > 0)
 			{
-				// TODO:
 				int32 AttributePointsReward = 0;
 				int32 SpellPointsReward = 0;
 				for (int UpLevel = CurrentLevel + 1; UpLevel <= NewLevel; UpLevel++)
