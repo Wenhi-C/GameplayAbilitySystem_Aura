@@ -7,7 +7,7 @@
 #include "Interaction/PlayerInterface.h"
 #include "AuraCharacter.generated.h"
 class AAuraPlayerState;
-
+class UNiagaraComponent; 
 /**
  * 需要在蓝图中设置：
  *	Weapon的资产
@@ -40,6 +40,17 @@ public:
 	virtual void AddToSpellPoints_Implementation(int32 InSpellPoints) override;
 	// End Player Interface
 
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)
+	TObjectPtr<UNiagaraComponent> LevelUpNiagaraComponent;
 private:
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<class UCameraComponent> TopDownCameraComponent;
+
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<class USpringArmComponent> CameraBoom;
+	
 	virtual  void InitAbilityActorInfo() override;
+
+	UFUNCTION(NetMulticast, Reliable)
+	void MulticastLevelUpParticles() const;
 };
