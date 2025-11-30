@@ -20,7 +20,7 @@ void UAttributeMenuWidgetController::BroadcastInitialValues()
 	}
 
 
-	if (AAuraPlayerState* AuraPlayerState = Cast<AAuraPlayerState>(PlayerState))
+	if (GetAuraPlayerState())
 	{
 		OnAttributePointsChangedDelegate.Broadcast(AuraPlayerState->GetAttributePoints());
 		OnSpellPointsChangedDelegate.Broadcast(AuraPlayerState->GetSpellPoints());
@@ -39,7 +39,7 @@ void UAttributeMenuWidgetController::BindCallbacksToDependencies()
 			}
 			);
 	}
-	if (AAuraPlayerState* AuraPlayerState = Cast<AAuraPlayerState>(PlayerState))
+	if (GetAuraPlayerState())
 	{
 		AuraPlayerState->OnAttributePointsChangedDelegate.AddLambda(
 			[this](int32 NewAttributePoints)
