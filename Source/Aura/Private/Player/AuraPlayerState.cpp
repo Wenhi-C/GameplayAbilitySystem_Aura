@@ -82,7 +82,7 @@ void AAuraPlayerState::SetSpellPoints(int32 InSpellPoints)
 void AAuraPlayerState::AddToSpellPoints(int32 InSpellPoints)
 {
 	SpellPoints += InSpellPoints;
-	OnSpellPointsChangedDelegate.Broadcast(SpellPoints); 
+ 	OnSpellPointsChangedDelegate.Broadcast(SpellPoints); 
 }
 
 void AAuraPlayerState::OnRep_Level(int32 OldLevel)
