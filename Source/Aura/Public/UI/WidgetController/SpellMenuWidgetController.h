@@ -30,8 +30,9 @@ public:
 
 	UPROPERTY(BlueprintAssignable, Category="GAS|Spell Points")
 	FSpellGlobeSelectedSignature SpellGlobeSelectedDelegate;
-	
 
+	UFUNCTION(BlueprintCallable)
+	void GlobeDeselect();
 protected:
 	UFUNCTION(BlueprintCallable, Category="GAS")
 	void SpellGlobeSelected();
@@ -47,5 +48,6 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, Category="GAS")
 	FGameplayTag SelectedAbilityStatusTag = FAuraGameplayTags::Get().Abilities_Status_Locked;
+
 	
 };
