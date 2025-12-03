@@ -93,4 +93,6 @@ protected:
 	AAuraPlayerState* GetAuraPlayerState() ;
 	UAuraAbilitySystemComponent* GetAuraAbilitySystemComponent();
 	UAuraAttributeSet* GetAuraAttributeSet();
+private:
+	
 };
