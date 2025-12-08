@@ -64,7 +64,7 @@ public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	UAnimMontage* GetHitReactMontage();
 
-	virtual void Die() = 0;
+	virtual void Die(const FVector& DeathImpulse = FVector::ZeroVector) = 0;
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	bool IsDead() const;
@@ -92,4 +92,6 @@ public:
 
 	virtual FOnASCRegistered& GetOnASCRegisteredDelegate() = 0;
 	virtual FOnDeath& GetOnDeathDelegate() = 0;
+
+	
 };

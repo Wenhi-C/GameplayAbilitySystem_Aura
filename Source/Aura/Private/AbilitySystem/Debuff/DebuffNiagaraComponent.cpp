@@ -25,7 +25,7 @@ void UDebuffNiagaraComponent::BeginPlay()
 		OwnerASC->RegisterGameplayTagEvent(DebuffTag).AddLambda(
 			[this](const FGameplayTag DebuffTag, int32 NewCount)
 			{
-				if (NewCount > 0)
+				if (IsValid(GetOwner()) && GetOwner()->Implements<UCombatInterface>() && ICombatInterface::Execute_IsDead() && NewCount > 0)
 				{
 					Activate();
 				}
