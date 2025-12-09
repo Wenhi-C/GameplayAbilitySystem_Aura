@@ -10,6 +10,7 @@
 #include "MovieSceneTracksComponentTypes.h"
 #include "NavigationPath.h"
 #include "NavigationSystem.h"
+#include "NiagaraFunctionLibrary.h"
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
 #include "BaseBehaviors/BehaviorTargetInterfaces.h"
 #include "Components/SplineComponent.h"
@@ -76,10 +77,11 @@ void AAuraPlayerController::AbilityInputTagPressed(FGameplayTag InputTag)
 {
 	if (InputTag.MatchesTagExact(FAuraGameplayTags::Get().InputTag_LMB))
 	{
+		
 		bTargeting = ThisActor ? true : false;
-        	bAutoRunning = false;
+		bAutoRunning = false;
 	}
-	
+	if (GetASC()) GetASC()->AbilityInputTagPressed(InputTag);
 	
 }
 
@@ -111,6 +113,7 @@ void AAuraPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 					bAutoRunning = true;
 				}
 			}
+			UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ClickNiagaraSystem, CachedDestination);
 		}
 		FollowTime = 0.f;
 		bTargeting = false;

@@ -40,7 +40,7 @@ void USpellMenuWidgetController::BindCallbacksToDependencies()
 			}
 		});
 
-	GetAuraAbilitySystemComponent()->AbilityEquipedDelegate.AddUObject(this, &USpellMenuWidgetController::OnAbilityEquipped);
+	GetAuraAbilitySystemComponent()->AbilityEquippedDelegate.AddUObject(this, &USpellMenuWidgetController::OnAbilityEquipped);
 	
 	if (GetAuraPlayerState())
 	{

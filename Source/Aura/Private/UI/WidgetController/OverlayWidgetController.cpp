@@ -80,7 +80,7 @@ void UOverlayWidgetController::BindCallbacksToDependencies()
 	
 	if (GetAuraAbilitySystemComponent())
 	{
-		GetAuraAbilitySystemComponent()->AbilityEquipedDelegate.AddUObject(this, &UOverlayWidgetController::OnAbilityEquipped);
+		GetAuraAbilitySystemComponent()->AbilityEquippedDelegate.AddUObject(this, &UOverlayWidgetController::OnAbilityEquipped);
 		if (GetAuraAbilitySystemComponent()->bStartupAbilitiesGiven)
 		{
 			BroadcastAbilityInfo();
