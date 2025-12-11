@@ -25,3 +25,14 @@
 - ![alt text](NetExecutionPolicy.PNG)
 - ![alt text](GameplayAbilityThingsNotToUse.PNG)
 - ![alt text](ClientNavigation.PNG)
+###  于DefaultGame.ini中添加
+[/Script/GameplayAbilities.AbilitySystemGlobals]
++AbilitySystemGlobalsClassName="/Script/Aura.AuraAbilitySystemGlobals"
++GameplayCueNotifyPaths=/Game/Blueprint/AbilitySystem/GameplayCueNotifies
+###  于DefaultEngine.ini中添加
+[/Script/Engine.RenderSettings]
+r.TextureStreaming=True
+r.Streaming.PoolSize=1000
+
+[ConsoleVariables]
+net.MaxRPCPerNetUpdate=10
