@@ -5,11 +5,14 @@
 #include "Components/CapsuleComponent.h"
 #include "AbilitySystem/AuraAttributeSet.h"
 #include "AbilitySystem/Debuff/DebuffNiagaraComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "Net/UnrealNetwork.h"
 
 AAuraCharacterBase::AAuraCharacterBase()
 {
 	PrimaryActorTick.bCanEverTick = false;
+	bReplicates = true;
 
 	BurnDebuffComponent = CreateDefaultSubobject<UDebuffNiagaraComponent>("BurnDebuff");
 	BurnDebuffComponent->SetupAttachment(GetRootComponent());
@@ -25,6 +28,12 @@ AAuraCharacterBase::AAuraCharacterBase()
 	Weapon->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 	
+}
+
+void AAuraCharacterBase::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME(AAuraCharacterBase, bIsStunned);
 }
 
 UAbilitySystemComponent* AAuraCharacterBase::GetAbilitySystemComponent() const
@@ -64,10 +73,21 @@ void AAuraCharacterBase::MulticastHandleDeath_Implementation(const FVector& Deat
 	OnDeath.Broadcast(this);
 }
 
+void AAuraCharacterBase::OnRep_Stunned()
+{
+	
+}
+
+void AAuraCharacterBase::StunTagChanged(const FGameplayTag CallbackTag, int32 NewCount)
+{
+	bIsStunned = NewCount > 0;
+	
+}
+
 void AAuraCharacterBase::BeginPlay()
 {
 	Super::BeginPlay();
-
+	GetCharacterMovement()->MaxWalkSpeed = bIsStunned ? 0.f : BaseWalkSpeed;
 	
 }
 

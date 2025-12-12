@@ -35,7 +35,8 @@ AAuraEnemy::AAuraEnemy()
 	bUseControllerRotationYaw = false;
 	bUseControllerRotationYaw = false;
 	GetCharacterMovement()->bUseControllerDesiredRotation = true;
-	
+
+	BaseWalkSpeed = 250.f;
 }
 
 void AAuraEnemy::PossessedBy(AController* NewController)
@@ -163,6 +164,7 @@ void AAuraEnemy::InitAbilityActorInfo()
 {
 	AbilitySystemComponent->InitAbilityActorInfo(this, this);
 	Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent)->AbilityActorInfoSet();
+	AbilitySystemComponent->RegisterGameplayTagEvent(FAuraGameplayTags::Get().Debuff_Stun, EGameplayTagEventType::NewOrRemoved).AddUObject(this, &AAuraEnemy::StunTagChanged);
 	if (HasAuthority())
 	{
 		InitializeDefaultAttributes();
@@ -173,4 +175,17 @@ void AAuraEnemy::InitAbilityActorInfo()
 void AAuraEnemy::InitializeDefaultAttributes() const
 {
 	UAuraAbilitySystemLibrary::InitializeDefaultAttributes(this, CharacterClass, Level, AbilitySystemComponent);
+}
+
+void AAuraEnemy::StunTagChanged(const FGameplayTag CallbackTag, int32 NewCount)
+{
+	bIsStunned = NewCount > 0;
+	GetCharacterMovement()->MaxWalkSpeed = bIsStunned ? 0.f : BaseWalkSpeed;
+	// 检查 AuraAIController 和 BlackboardComponent 是否存在
+	if (AuraAIController && AuraAIController->GetBlackboardComponent())
+	{
+		AuraAIController->GetBlackboardComponent()->SetValueAsBool(FName("Stunned"), bHitReacting);
+		
+	}
+	
 }

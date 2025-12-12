@@ -40,6 +40,7 @@ void UAuraBeamSpell::TraceFirstTarget(const FVector& BeamTargetLocation)
 		{
 			TArray<AActor*> ActorsToIgnore;
 			ActorsToIgnore.Add(OwnerCharacter);
+			
 			FHitResult HitResult;
 			const FVector SocketLocation = Weapon->GetSocketLocation(FName("TipSocket"));
 			UKismetSystemLibrary::SphereTraceSingle(

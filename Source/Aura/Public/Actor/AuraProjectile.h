@@ -37,6 +37,8 @@ protected:
 	UFUNCTION()
 	void OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
+	UFUNCTION()
+	bool IsValidOverlap(AActor* OtherActor);
 private:
 	UPROPERTY(EditDefaultsOnly)
 	float LifeSpan = 5.f;

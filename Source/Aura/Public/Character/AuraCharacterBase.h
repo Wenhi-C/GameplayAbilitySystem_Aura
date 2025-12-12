@@ -32,7 +32,7 @@ class AURA_API AAuraCharacterBase : public ACharacter, public IAbilitySystemInte
 
 public:
 	AAuraCharacterBase();
-
+	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
 	// 拥有 AbilitySystemComponent 的 Actor 必须实现 IAbilitySystemInterface 接口, 并且重载此函数以便获取 AbilitySystemComponent
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	
@@ -63,6 +63,12 @@ public:
 	
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	TArray<FTaggedMontage> AttackMontages;
+
+	UPROPERTY(ReplicatedUsing = OnRep_Stunned, BlueprintReadOnly)
+	bool bIsStunned = false;
+
+	UFUNCTION()
+	virtual void OnRep_Stunned();
 	
 protected:
 	virtual void BeginPlay() override;
@@ -83,6 +89,11 @@ protected:
 	FName TailSocketName;
 
 	bool bDead = false;
+	
+	UPROPERTY(EditAnywhere ,BlueprintReadOnly, Category = "Combat")
+	float BaseWalkSpeed = 600.f;
+
+	virtual void StunTagChanged(const FGameplayTag CallbackTag, int32 NewCount);
 	
 	UPROPERTY()
 	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
@@ -144,6 +155,8 @@ protected:
 
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<UDebuffNiagaraComponent> BurnDebuffComponent;
+
+	
 private:
 	UPROPERTY(EditAnywhere, Category = "Abilities")
 	TArray<TSubclassOf<UGameplayAbility>> StartupAbilities;
@@ -154,3 +167,6 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	TObjectPtr<UAnimMontage> HitReactMontage;
 };
+
+
+

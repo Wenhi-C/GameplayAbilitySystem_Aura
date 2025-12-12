@@ -172,7 +172,6 @@ void UAuraAttributeSet::HandleIncomingDamage(const FEffectProperties& Props)
 		const bool bFatal = NewHealth <= 0.f;
 		if (bFatal)
 		{
-			
 			ICombatInterface* CombatInterface = Cast<ICombatInterface>(Props.TargetAvatarActor);
 			if (CombatInterface)
 			{
@@ -219,9 +218,16 @@ void UAuraAttributeSet::Debuff(const FEffectProperties& Props)
 	Effect->Period = DebuffFrequency;
 	Effect->DurationMagnitude = FScalableFloat(DebuffDuration);
 
-	
+	const FGameplayTag DebuffTag = GameplayTags.DamageTypesToDebuffs[DamageType];
 	Effect->CachedGrantedTags.AddTag(GameplayTags.DamageTypesToDebuffs[DamageType]);
-
+	if (DebuffTag.MatchesTagExact(GameplayTags.Debuff_Stun))
+	{
+		Effect->CachedGrantedTags.AddTag(GameplayTags.Player_Block_InputPressed);
+		Effect->CachedGrantedTags.AddTag(GameplayTags.Player_Block_InputHeld);
+		Effect->CachedGrantedTags.AddTag(GameplayTags.Player_Block_InputReleased);
+		Effect->CachedGrantedTags.AddTag(GameplayTags.Player_Block_CursorTrace);
+	}
+	
 	Effect->StackingType = EGameplayEffectStackingType::AggregateBySource;
 	Effect->StackLimitCount = 1;
 	

@@ -44,6 +44,8 @@ public:
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)
 	TObjectPtr<UNiagaraComponent> LevelUpNiagaraComponent;
+
+	virtual void OnRep_Stunned();
 private:
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<class UCameraComponent> TopDownCameraComponent;
