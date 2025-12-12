@@ -66,6 +66,7 @@ public:
 
 	virtual void Die(const FVector& DeathImpulse = FVector::ZeroVector) = 0;
 
+	
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	bool IsDead() const;
 

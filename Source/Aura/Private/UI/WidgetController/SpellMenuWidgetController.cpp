@@ -50,7 +50,6 @@ void USpellMenuWidgetController::BindCallbacksToDependencies()
 				OnSpellPointsChangedDelegate.Broadcast(SpellPoints);
 				ShouldEnableButtons();
 
-				ShouldEnableButtons();
 				FString Description;
 				FString NextLevelDescription;
 				GetAuraAbilitySystemComponent()->GetDescriptionByAbilityTag(SelectedAbilityTag, Description, NextLevelDescription);
@@ -171,7 +170,7 @@ void USpellMenuWidgetController::ShouldEnableButtons()
 void USpellMenuWidgetController::OnAbilityEquipped(const FGameplayTag& AbilityTag, const FGameplayTag& Status,
 	const FGameplayTag& Slot, const FGameplayTag& PreviousSlot)
 {
-	bWaitingForEquipSelection = false;
+ 	bWaitingForEquipSelection = false;
 
 	const FAuraGameplayTags& GameplayTags = FAuraGameplayTags::Get();
 	FAuraAbilityInfo LastSlotInfo;

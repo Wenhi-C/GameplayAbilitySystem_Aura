@@ -18,7 +18,7 @@ AAuraProjectile::AAuraProjectile()
 {
 	PrimaryActorTick.bCanEverTick = false;
 	bReplicates = true;
-	
+	SetReplicateMovement(true);
 	
 	
 	Sphere = CreateDefaultSubobject<USphereComponent>("Sphere");
