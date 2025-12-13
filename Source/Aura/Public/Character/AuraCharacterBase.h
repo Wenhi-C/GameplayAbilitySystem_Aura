@@ -139,6 +139,9 @@ protected:
 	
 	void AddCharacterAbilities() const;
 
+	// 只在服务器执行，添加AbilityInfo到ASC中，避免Client无法通过GameMode获得AbilityInfo
+	void AddAbilityInfoToASC();
+
 	// Dissolve Effects
 
 	void Dissolve();

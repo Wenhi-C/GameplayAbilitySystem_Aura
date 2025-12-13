@@ -97,6 +97,7 @@ private:
 
 	UPROPERTY()
 	TObjectPtr<AMagicCircle> MagicCircle;
+	
 
 	void UpdateMagicCircleLocation();
 };

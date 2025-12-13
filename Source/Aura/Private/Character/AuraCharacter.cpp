@@ -54,7 +54,7 @@ void AAuraCharacter::PossessedBy(AController* NewController)
 
 	// 添加角色初始能力，只需要在服务器端执行
 	AddCharacterAbilities();
-	
+	AddAbilityInfoToASC();
 }
 
 // Init Ability actor info for the Client
@@ -226,6 +226,7 @@ void AAuraCharacter::InitAbilityActorInfo()
 	
 	AbilitySystemComponent = AuraPlayerState->GetAbilitySystemComponent();
 	AttributeSet = AuraPlayerState->GetAttributeSet();
+	
 	
 	AbilitySystemComponent->InitAbilityActorInfo(AuraPlayerState, this);
 	// 调用蓝图函数

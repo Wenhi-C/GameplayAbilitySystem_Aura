@@ -7,9 +7,10 @@
 
 FAuraAbilityInfo UAbilityInfo::FindAbilityInfoForTag(const FGameplayTag& AbilityTag, bool bLogNotFound) const
 {
+	if (!IsValid(this)) return FAuraAbilityInfo();
 	for (const FAuraAbilityInfo& Info : AbilityInformation)
 	{
-		if (Info.AbilityTag == AbilityTag)
+		if (Info.AbilityTag.MatchesTagExact(AbilityTag))
 		{
 			return Info;
 		}

@@ -2,6 +2,7 @@
 #include "AbilitySystemComponent.h"
 #include "AuraGameplayTags.h"
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
+#include "AbilitySystem/AuraAbilitySystemLibrary.h"
 #include "Components/CapsuleComponent.h"
 #include "AbilitySystem/Debuff/DebuffNiagaraComponent.h"
 #include "AbilitySystem/Passive/PassiveNiagaraComponent.h"
@@ -234,6 +235,12 @@ void AAuraCharacterBase::AddCharacterAbilities() const
 	
 	AuraASC->AddCharacterAbilities(StartupAbilities);
 	AuraASC->AddCharacterPassiveAbilities(StartupPassiveAbilities);
+}
+
+void AAuraCharacterBase::AddAbilityInfoToASC() 
+{
+	UAuraAbilitySystemComponent* AuraASC = Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent);
+	AuraASC->AbilityInfo = DuplicateObject<UAbilityInfo>(UAuraAbilitySystemLibrary::GetAbilityInfo(this), GetTransientPackage() , FName("AbilityInfo_Copy"));
 }
 
 void AAuraCharacterBase::Dissolve()
