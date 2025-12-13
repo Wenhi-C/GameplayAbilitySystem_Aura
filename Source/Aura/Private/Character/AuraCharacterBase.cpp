@@ -3,15 +3,15 @@
 #include "AuraGameplayTags.h"
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
 #include "Components/CapsuleComponent.h"
-#include "AbilitySystem/AuraAttributeSet.h"
 #include "AbilitySystem/Debuff/DebuffNiagaraComponent.h"
+#include "AbilitySystem/Passive/PassiveNiagaraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Net/UnrealNetwork.h"
 
 AAuraCharacterBase::AAuraCharacterBase()
 {
-	PrimaryActorTick.bCanEverTick = false;
+	PrimaryActorTick.bCanEverTick = true;
 	bReplicates = true;
 
 	BurnDebuffComponent = CreateDefaultSubobject<UDebuffNiagaraComponent>("BurnDebuff");
@@ -31,7 +31,21 @@ AAuraCharacterBase::AAuraCharacterBase()
 	Weapon->SetupAttachment(GetMesh(), FName("WeaponHandSocket"));
 	Weapon->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
+	EffectAttachComponent = CreateDefaultSubobject<USceneComponent>("EffectAttachComponent");
+	EffectAttachComponent->SetupAttachment(RootComponent);
+	HaloOfProtectionNiagraComponent = CreateDefaultSubobject<UPassiveNiagaraComponent>("HaloOfProtectionComponent");
+	HaloOfProtectionNiagraComponent->SetupAttachment(EffectAttachComponent);
+	LifeSiphonNiagaraComponent = CreateDefaultSubobject<UPassiveNiagaraComponent>("LifeSiphonNiagaraComponent");
+	LifeSiphonNiagaraComponent->SetupAttachment(EffectAttachComponent);
+	ManaSiphonNiagaraComponent = CreateDefaultSubobject<UPassiveNiagaraComponent>("ManaSiphonNiagaraComponent");
+	ManaSiphonNiagaraComponent->SetupAttachment(EffectAttachComponent);
 	
+}
+
+void AAuraCharacterBase::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+	EffectAttachComponent->SetWorldRotation(FRotator::ZeroRotator);
 }
 
 void AAuraCharacterBase::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const

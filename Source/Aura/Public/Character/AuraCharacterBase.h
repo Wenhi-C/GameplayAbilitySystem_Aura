@@ -9,6 +9,7 @@
 #include "Interaction/CombatInterface.h"
 #include "AuraCharacterBase.generated.h"
 
+class UPassiveNiagaraComponent;
 class UDebuffNiagaraComponent;
 class UNiagaraSystem;
 class UGameplayAbility;
@@ -32,6 +33,7 @@ class AURA_API AAuraCharacterBase : public ACharacter, public IAbilitySystemInte
 
 public:
 	AAuraCharacterBase();
+	virtual void Tick(float DeltaTime) override;
 	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
 	// 拥有 AbilitySystemComponent 的 Actor 必须实现 IAbilitySystemInterface 接口, 并且重载此函数以便获取 AbilitySystemComponent
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
@@ -179,6 +181,18 @@ private:
 	
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	TObjectPtr<UAnimMontage> HitReactMontage;
+
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<UPassiveNiagaraComponent> HaloOfProtectionNiagraComponent;
+
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<UPassiveNiagaraComponent> LifeSiphonNiagaraComponent;
+
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<UPassiveNiagaraComponent> ManaSiphonNiagaraComponent;
+
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<USceneComponent> EffectAttachComponent;
 };
 
 

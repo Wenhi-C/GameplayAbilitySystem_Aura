@@ -36,3 +36,6 @@ r.Streaming.PoolSize=1000
 
 [ConsoleVariables]
 net.MaxRPCPerNetUpdate=10
+
+在ASC中获取GetActivatableAbilities()时，
+应该添加锁FScopedAbilityListLock ActiveScopeLock(*this);
