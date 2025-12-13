@@ -46,6 +46,7 @@ public:
 	TObjectPtr<UNiagaraComponent> LevelUpNiagaraComponent;
 
 	virtual void OnRep_Stunned();
+	virtual void OnRep_Burned();
 private:
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<class UCameraComponent> TopDownCameraComponent;
