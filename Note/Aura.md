@@ -39,3 +39,7 @@ net.MaxRPCPerNetUpdate=10
 
 在ASC中获取GetActivatableAbilities()时，
 应该添加锁FScopedAbilityListLock ActiveScopeLock(*this);
+
+# 对于快速移动的光线出现拖影->更改抗锯齿模式，运动模糊
+![alt text](image.png)
+![alt text](image-1.png)
