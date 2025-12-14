@@ -110,10 +110,13 @@ void USpellMenuWidgetController::SpellGlobeSelected(const FGameplayTag& InSelect
 {
 	if (bWaitingForEquipSelection)
 	{
-		FGameplayTag SelectedAbilityType = AbilityInfo->FindAbilityInfoForTag(SelectedAbilityTag).AbilityType;
-		StopWaitingForEquipSelectionDelegate.Broadcast(SelectedAbilityType);
-		bWaitingForEquipSelection = false;
+		if (SelectedAbilityTag.IsValid())
+		{
+			FGameplayTag SelectedAbilityType = AbilityInfo->FindAbilityInfoForTag(SelectedAbilityTag).AbilityType;
+			StopWaitingForEquipSelectionDelegate.Broadcast(SelectedAbilityType);
+		}
 	}
+	bWaitingForEquipSelection = false;
 	
 	SelectedAbilityTag = InSelectedAbilityTag;
 	const FAuraGameplayTags& GameplayTags = FAuraGameplayTags::Get();

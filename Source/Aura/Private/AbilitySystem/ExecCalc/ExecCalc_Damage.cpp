@@ -177,10 +177,9 @@ void UExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecuti
 			//    on the Victim, set DamageTypeValue to the damage received from the broadcast)
 			// 5. In lambda, set DamageTypeValue to the Damage received from the broadcast
 			// 经测试，5中的Lambda总能在Damage += DamageTypeValue;之前执行
-			
+			/*
 			if (ICombatInterface* CombatInterface = Cast<ICombatInterface>(TargetAvatar))
-			{
-				CombatInterface->GetOnDamageSignature().Clear();
+			{ 
 				CombatInterface->GetOnDamageSignature().AddLambda(
 					[&](float DamageAmount)
 					{
@@ -199,6 +198,18 @@ void UExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecuti
 			TArray<AActor*>(),
 			SourceAvatar,
 			nullptr);
+			*/
+			const float RadialDamageInnerRadius = UAuraAbilitySystemLibrary::GetRadialDamageInnerRadius(EffectContextHandle);
+			const float RadialDamageOuterRadius = UAuraAbilitySystemLibrary::GetRadialDamageOuterRadius(EffectContextHandle);
+			const float Distance = FVector::DistXY(TargetAvatar->GetActorLocation(), UAuraAbilitySystemLibrary::GetRadialDamageOrigin(EffectContextHandle));
+			if (RadialDamageInnerRadius <= Distance && Distance <= RadialDamageOuterRadius)
+			{
+				DamageTypeValue *= (1.f - (Distance - RadialDamageInnerRadius) / (RadialDamageOuterRadius - RadialDamageInnerRadius));
+			}
+			else if (Distance > RadialDamageOuterRadius)
+			{
+				DamageTypeValue = 0.f;
+			}
 		}
 		Damage += DamageTypeValue;
 	}
