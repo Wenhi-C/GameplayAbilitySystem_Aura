@@ -365,6 +365,11 @@ void FAuraGameplayTags::InitializeNativeGameplayTags()
 		FString("FireBolt Cooldown Tag")
 		);
 
+	GameplayTags.Cooldown_Arcane_ArcaneShards =  UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Cooldown.Arcane.ArcaneShards"),
+		FString("ArcaneShards Cooldown Tag")
+		);
+
 	/*
 	 * Combat Socket
 	 */
