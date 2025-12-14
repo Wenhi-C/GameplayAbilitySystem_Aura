@@ -9,6 +9,8 @@
 #include "Interaction/CombatInterface.h"
 #include "AuraCharacterBase.generated.h"
 
+
+
 class UPassiveNiagaraComponent;
 class UDebuffNiagaraComponent;
 class UNiagaraSystem;
@@ -35,6 +37,7 @@ public:
 	AAuraCharacterBase();
 	virtual void Tick(float DeltaTime) override;
 	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
+	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 	// 拥有 AbilitySystemComponent 的 Actor 必须实现 IAbilitySystemInterface 接口, 并且重载此函数以便获取 AbilitySystemComponent
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	
@@ -60,10 +63,12 @@ public:
 	virtual USkeletalMeshComponent* GetWeapon_Implementation() override;
 	virtual bool IsBeingShocked_Implementation() const override;
 	virtual void SetBeingShocked_Implementation(bool InBeingShocked) override;
+	virtual FOnDamageSignature& GetOnDamageSignature() override;
 	/* Combat Interface */
 
 	FOnASCRegistered OnASCRegistered;
 	FOnDeath OnDeath;
+	FOnDamageSignature OnDamageDelegate;
 	
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	TArray<FTaggedMontage> AttackMontages;

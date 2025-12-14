@@ -7,6 +7,7 @@
 #include "AbilitySystem/Data/CharacterClassInfo.h"
 #include "AbilitySystem/AuraAbilitySystemLibrary.h"
 #include "Interaction/CombatInterface.h"
+#include "Kismet/GameplayStatics.h"
 
 
 struct AuraDamageStatics
@@ -98,8 +99,9 @@ void UExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecuti
 		TargetPlayerLevel = ICombatInterface::Execute_GetPlayerLevel(TargetAvatar);
 	}
 	
-
 	const FGameplayEffectSpec& Spec = ExecutionParams.GetOwningSpec();
+	FGameplayEffectContextHandle EffectContextHandle = Spec.GetContext();
+	FGameplayEffectContext* Context = EffectContextHandle.Get();
 	
 
 	const FGameplayTagContainer* SourceTags = Spec.CapturedSourceTags.GetAggregatedTags();
@@ -155,13 +157,49 @@ void UExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecuti
 		const FGameplayEffectAttributeCaptureDefinition CaptureDef = TagsToCaptureDefs[ResistanceTag];
 
 		float DamageTypeValue = Spec.GetSetByCallerMagnitude(Pair.Key, false, 0.f);
+		if (DamageTypeValue <= 0.f)
+		{
+			continue;
+		}
 		
 		float Resistance = 0.f;
 		ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(CaptureDef, EvaluationParameters, Resistance);
 		Resistance = FMath::Clamp(Resistance, 0.f, 100.f);
 		
 		DamageTypeValue *= (100.f - Resistance) / 100.f;
-		
+
+		if (UAuraAbilitySystemLibrary::IsRadialDamage(EffectContextHandle))
+		{
+			// 1. Override TakeDamage in AuraCharacterBase
+			// 2. Create delegate OnDamageDelegate, broadcast damage received in TakeDamage
+			// 3. Bind lambda to OnDamageDelegate on the Victim here
+			// 4. Call UGameplayStatics::ApplyRadialDamageWithFalloff to cause damage (this will result in TakeDamage being called
+			//    on the Victim, set DamageTypeValue to the damage received from the broadcast)
+			// 5. In lambda, set DamageTypeValue to the Damage received from the broadcast
+			// 经测试，5中的Lambda总能在Damage += DamageTypeValue;之前执行
+			
+			if (ICombatInterface* CombatInterface = Cast<ICombatInterface>(TargetAvatar))
+			{
+				CombatInterface->GetOnDamageSignature().Clear();
+				CombatInterface->GetOnDamageSignature().AddLambda(
+					[&](float DamageAmount)
+					{
+						DamageTypeValue = DamageAmount;
+					});
+			}
+			UGameplayStatics::ApplyRadialDamageWithFalloff(
+			TargetAvatar,
+			DamageTypeValue,
+			0.f,
+			UAuraAbilitySystemLibrary::GetRadialDamageOrigin(EffectContextHandle),
+			UAuraAbilitySystemLibrary::GetRadialDamageInnerRadius(EffectContextHandle),
+			UAuraAbilitySystemLibrary::GetRadialDamageOuterRadius(EffectContextHandle),
+			1.f,
+			UDamageType::StaticClass(),
+			TArray<AActor*>(),
+			SourceAvatar,
+			nullptr);
+		}
 		Damage += DamageTypeValue;
 	}
 	
@@ -206,9 +244,6 @@ void UExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecuti
 	
 	const float EffectiveCriticalHitChance = SourceCriticalHitChance - TargetCriticalHitResistance * CriticalHitResistanceCoefficient;
 	const bool bCriticalHit = FMath::RandRange(0.f, 100.f) < EffectiveCriticalHitChance;
-
-	FGameplayEffectContextHandle EffectContextHandle = Spec.GetContext();
-	FGameplayEffectContext* Context = EffectContextHandle.Get();
 
 	// SetContext
 	FAuraGameplayEffectContext* AuraContext = static_cast<FAuraGameplayEffectContext*>(Context);

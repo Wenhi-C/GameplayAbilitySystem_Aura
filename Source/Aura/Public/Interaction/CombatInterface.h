@@ -12,9 +12,10 @@ enum class ECharacterClass : uint8;
 class UNiagaraSystem;
 class UAnimMontage;
 
+
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnASCRegistered, UAbilitySystemComponent*);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDeath, AActor*, DeadActor);
-
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnDamageSignature, float /*DamageAmount*/);
 
 USTRUCT(BlueprintType)
 struct FTaggedMontage
@@ -65,7 +66,7 @@ public:
 	UAnimMontage* GetHitReactMontage();
 
 	virtual void Die(const FVector& DeathImpulse = FVector::ZeroVector) = 0;
-
+	virtual FOnDamageSignature& GetOnDamageSignature() = 0;
 	
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	bool IsDead() const;
