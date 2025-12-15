@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "AuraAbilityTypes.h"
 #include "AbilitySystem/Abilities/AuraDamageGameplayAbility.h"
 #include "AuraFireBlast.generated.h"
 
@@ -24,9 +25,13 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "FireBlast")
 	int32 NumFireBalls = 12;
 
+
+
 private:
 	
 	
 	UPROPERTY(EditDefaultsOnly, Category = "FireBlast")
 	TSubclassOf<AAuraFireBall> FireBallClass;
+
+	
 };

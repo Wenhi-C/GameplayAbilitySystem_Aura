@@ -33,7 +33,7 @@ protected:
 	virtual void BeginPlay() override;
 
 	UFUNCTION(BlueprintCallable)
-	void OnHit();
+	virtual void OnHit();
 	virtual void Destroyed() override;
 	
 	UFUNCTION()
@@ -51,13 +51,13 @@ protected:
 	TObjectPtr<USphereComponent> Sphere;
 
 	UPROPERTY(EditAnywhere)
-	TObjectPtr<USoundBase> LoopingSound;
-
-	UPROPERTY(EditAnywhere)
 	TObjectPtr<UNiagaraSystem> ImpactEffect;
 
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<USoundBase> ImpactSound;
+
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<USoundBase> LoopingSound;
 
 	UPROPERTY()
 	TObjectPtr<UAudioComponent> LoopingSoundComponent;
