@@ -4,9 +4,12 @@
 
 #include "CoreMinimal.h"
 #include "MVVMViewModelBase.h"
+#include "Game/LoadScreenSaveGame.h"
 #include "MVVM_LoadSlot.generated.h"
 
+
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FSetWidgetSwitcherIndex, int32, WidgetSwitcherIndex);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FEnableSelectSlotButton, bool, bEnable);
 
 /**
  * 
@@ -19,24 +22,38 @@ public:
 	UPROPERTY(BlueprintAssignable)
 	FSetWidgetSwitcherIndex SetWidgetSwitcherIndex;
 
+	UPROPERTY(BlueprintAssignable)
+	FEnableSelectSlotButton EnableSelectSlotButton;
+	
 	void InitializeSlot();
 
 	UPROPERTY()
 	int32 SlotIndex;
 
-	/* Field Notifies */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, FieldNotify, Setter, Getter)
-	FString PlayerName;
-
-	void SetPlayerName(const FString& InPlayerName);
-
-	FString GetPlayerName() const { return  PlayerName; }
+	UPROPERTY()
+	TEnumAsByte<ESaveSlotStatus>  SlotStatus;
+	
+	UPROPERTY()
+	FName PlayerStartTag;
 
 	void SetLoadSlotName(const FString& InLoadSlotName);
+	void SetPlayerName(const FString& InPlayerName);
+	void SetMapName(const FString& InMapName);
 
 	FString GetLoadSlotName() const { return LoadSlotName; }
-	
+	FString GetPlayerName() const { return  PlayerName; }
+	FString GetMapName() const { return MapName; }
+
 private:
+
+	/* Field Notifies */
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, FieldNotify, Setter, Getter, meta = (AllowPrivateAccess = "true"))
 	FString LoadSlotName;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, FieldNotify, Setter, Getter, meta = (AllowPrivateAccess = "true"))
+	FString PlayerName;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, FieldNotify, Setter, Getter, meta = (AllowPrivateAccess = "true"))
+	FString MapName;
 };

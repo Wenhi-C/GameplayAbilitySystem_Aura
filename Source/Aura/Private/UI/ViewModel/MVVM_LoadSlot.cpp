@@ -5,14 +5,20 @@
 
 void UMVVM_LoadSlot::InitializeSlot()
 {
-	// TODO: Check Slot status based on loaded data
-	SetWidgetSwitcherIndex.Broadcast(2);
+	
+	const int32 WidgetSwitcherIndex = SlotStatus;
+	SetWidgetSwitcherIndex.Broadcast(WidgetSwitcherIndex);
 }
 
 void UMVVM_LoadSlot::SetPlayerName(const FString& InPlayerName)
 {
 	// 会广播
 	UE_MVVM_SET_PROPERTY_VALUE(PlayerName, InPlayerName);
+}
+
+void UMVVM_LoadSlot::SetMapName(const FString& InMapName)
+{
+	UE_MVVM_SET_PROPERTY_VALUE(MapName, InMapName);
 }
 
 void UMVVM_LoadSlot::SetLoadSlotName(const FString& InLoadSlotName)
