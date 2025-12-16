@@ -101,6 +101,8 @@ void UMVVM_LoadScreen::PlayButtonPressed()
 	if (IsValid(SelectedSlot))
 	{
 		AuraGameInstance->PlayerStartTag = SelectedSlot->PlayerStartTag;
+		AuraGameInstance->LoadSlotName = SelectedSlot->GetLoadSlotName();
+		AuraGameInstance->LoadSlotIndex = SelectedSlot->SlotIndex;
 		AuraGameMode->TravelToMap(SelectedSlot);
 	}
 }
