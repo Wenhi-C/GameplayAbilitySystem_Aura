@@ -6,5 +6,16 @@
 void UMVVM_LoadSlot::InitializeSlot()
 {
 	// TODO: Check Slot status based on loaded data
-	SetWidgetSwitcherIndex.Broadcast(1);
+	SetWidgetSwitcherIndex.Broadcast(2);
+}
+
+void UMVVM_LoadSlot::SetPlayerName(const FString& InPlayerName)
+{
+	// 会广播
+	UE_MVVM_SET_PROPERTY_VALUE(PlayerName, InPlayerName);
+}
+
+void UMVVM_LoadSlot::SetLoadSlotName(const FString& InLoadSlotName)
+{
+	UE_MVVM_SET_PROPERTY_VALUE(LoadSlotName, InLoadSlotName);
 }
