@@ -7,6 +7,8 @@
 #include "AuraGameplayTags.h"
 #include "NiagaraComponent.h"
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
+#include "AbilitySystem/AuraAbilitySystemLibrary.h"
+#include "AbilitySystem/AuraAttributeSet.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Player/AuraPlayerController.h"
 #include "Player/AuraPlayerState.h"
@@ -55,11 +57,46 @@ void AAuraCharacter::PossessedBy(AController* NewController)
 	Super::PossessedBy(NewController);
 	
 	InitAbilityActorInfo();
+	
 
 	// 添加角色初始能力，只需要在服务器端执行
-	AddCharacterAbilities();
 	AddAbilityInfoToASC();
 }
+
+void AAuraCharacter::LoadProgress()
+{
+	AAuraGameModeBase* AuraGameMode = Cast<AAuraGameModeBase>(UGameplayStatics::GetGameMode(this));
+
+	if (AuraGameMode)
+	{
+		ULoadScreenSaveGame* SaveData = AuraGameMode->RetrieveInGameSaveData();
+		if (SaveData == nullptr) return;
+
+		
+		if (SaveData->bFirstTimeLoadIn)
+		{
+			InitializeDefaultAttributes();
+			AddCharacterAbilities();
+		}
+		else
+		{
+			if (AAuraPlayerState* AuraPlayerState = Cast<AAuraPlayerState>(GetPlayerState()))
+			{
+				AuraPlayerState->SetLevel(SaveData->PlayerLevel);
+				AuraPlayerState->SetXP(SaveData->XP);
+				AuraPlayerState->SetAttributePoints(SaveData->AttributePoints);
+				AuraPlayerState->SetSpellPoints(SaveData->SpellPoints);
+			}
+			UAuraAbilitySystemLibrary::InitializePrimaryAttributesFromSaveData(this, GetAbilitySystemComponent(), SaveData);
+			ApplyEffectToSelf(DefaultSecondaryAttributes, 1.f);
+			ApplyEffectToSelf(DefaultVitalAttributes, 1.f);
+		}
+		
+		
+		
+	}
+}
+
 
 // Init Ability actor info for the Client
 void AAuraCharacter::OnRep_PlayerState()
@@ -198,7 +235,48 @@ void AAuraCharacter::SaveProgress_Implementation(const FName& CheckPointTag)
 
 		SaveData->PlayerStartTag = CheckPointTag;
 
+		if (AAuraPlayerState* AuraPlayerState = Cast<AAuraPlayerState>(GetPlayerState()))
+		{
+			SaveData->PlayerLevel = AuraPlayerState->GetPlayerLevel();
+			SaveData->XP = AuraPlayerState->GetXP();
+			SaveData->SpellPoints = AuraPlayerState->GetSpellPoints();
+			SaveData->AttributePoints = AuraPlayerState->GetAttributePoints();
+		}
+	
+		SaveData->Strength = UAuraAttributeSet::GetStrengthAttribute().GetNumericValue(GetAttributeSet());
+		SaveData->Intelligence = UAuraAttributeSet::GetIntelligenceAttribute().GetNumericValue(GetAttributeSet());
+		SaveData->Resilience = UAuraAttributeSet::GetResilienceAttribute().GetNumericValue(GetAttributeSet());
+		SaveData->Vigor = UAuraAttributeSet::GetVigorAttribute().GetNumericValue(GetAttributeSet());
+
+		SaveData->bFirstTimeLoadIn = false;
+
+
+		if (!HasAuthority()) return;
+		UAuraAbilitySystemComponent* AuraASC = Cast<UAuraAbilitySystemComponent>(GetAbilitySystemComponent());
+		FForEachAbility SaveAbilityDelegate;
+		SaveAbilityDelegate.BindLambda(
+			[this, AuraASC, &SaveData](const FGameplayAbilitySpec& AbilitySpec)
+			{
+				
+				UAbilityInfo* AbilityInfo = UAuraAbilitySystemLibrary::GetAbilityInfo(this);
+				const FGameplayTag AbilityTag = AuraASC->GetAbilityTagFromSpec(AbilitySpec);
+				FAuraAbilityInfo Info = AbilityInfo->FindAbilityInfoForTag(AbilityTag);
+				
+				FSaveAbility SaveAbility;
+				SaveAbility.GameplayAbility = Info.Ability;
+				SaveAbility.AbilityTag = AbilityTag;
+				SaveAbility.AbilitySlot = AuraASC->GetSlotFromAbilityTag(AbilityTag);
+				SaveAbility.AbilityStatus = AuraASC->GetStatusFromAbilityTag(AbilityTag);
+				SaveAbility.AbilityLevel = AbilitySpec.Level;
+				SaveAbility.AbilityType = Info.AbilityType;
+
+				SaveData->SaveAbilities.Add(SaveAbility);
+			});
+		AuraASC->ForEachAbility(SaveAbilityDelegate);
+		
 		AuraGameMode->SaveInGameProgressData(SaveData);
+
+		
 	}
 	
 }
@@ -241,6 +319,7 @@ void AAuraCharacter::OnRep_Burned()
 }
 
 
+
 // 初始化能力角色信息
 void AAuraCharacter::InitAbilityActorInfo()
 {
@@ -264,6 +343,7 @@ void AAuraCharacter::InitAbilityActorInfo()
 			AuraHUD->InitOverlay(AuraPlayerController, AuraPlayerState, AbilitySystemComponent, AttributeSet);
 		}
 	}
-	InitializeDefaultAttributes();
+	LoadProgress();
+	// InitializeDefaultAttributes();
 }
 

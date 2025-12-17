@@ -44,9 +44,9 @@ void UOverlayWidgetController::BindCallbacksToDependencies()
 			}
 		});
 	GetAuraPlayerState()->OnLevelChangedDelegate.AddLambda(
-		[this](int32 NewLevel)
+		[this](int32 NewLevel, bool bLevelUp)
 		{
-			OnPlayerLevelChangeDelegate.Broadcast(NewLevel);
+			OnPlayerLevelChangeDelegate.Broadcast(NewLevel, bLevelUp);
 		});
 	
 	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(

@@ -12,7 +12,7 @@ class UAbilitySystemComponent;
 class UAttributeSet;
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnPlayerStateChanged, int32)
-
+DECLARE_MULTICAST_DELEGATE_TwoParams(FOnLevelChanged, int32 /*StatValue*/, bool /*bLevelUP*/)
 /**
  * 
  */
@@ -31,7 +31,7 @@ public:
 	
 	FOnPlayerStateChanged OnXPChangedDelegate;
 	
-	FOnPlayerStateChanged OnLevelChangedDelegate;
+	FOnLevelChanged OnLevelChangedDelegate;
 
 	FOnPlayerStateChanged OnAttributePointsChangedDelegate;
 
