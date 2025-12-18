@@ -43,3 +43,6 @@ net.MaxRPCPerNetUpdate=10
 # 对于快速移动的光线出现拖影->更改抗锯齿模式，运动模糊
 ![alt text](image.png)
 ![alt text](image-1.png)
+
+# Highlight 需要改的设置
+![alt text](image-2.png)

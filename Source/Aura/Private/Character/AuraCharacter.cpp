@@ -15,7 +15,6 @@
 #include "AbilitySystem/Data/LevelUpInfo.h"
 #include "AbilitySystem/Debuff/DebuffNiagaraComponent.h"
 #include "Camera/CameraComponent.h"
-#include "Game/AuraGameInstance.h"
 #include "Game/AuraGameModeBase.h"
 #include "Game/LoadScreenSaveGame.h"
 #include "GameFramework/SpringArmComponent.h"
@@ -57,7 +56,12 @@ void AAuraCharacter::PossessedBy(AController* NewController)
 	Super::PossessedBy(NewController);
 	
 	InitAbilityActorInfo();
-	
+	LoadProgress();
+
+	if (AAuraGameModeBase* AuraGameMode = Cast<AAuraGameModeBase>(UGameplayStatics::GetGameMode(this)))
+	{
+		AuraGameMode->LoadWorldState(GetWorld());
+	}
 
 	// 添加角色初始能力，只需要在服务器端执行
 	AddAbilityInfoToASC();
@@ -80,6 +84,10 @@ void AAuraCharacter::LoadProgress()
 		}
 		else
 		{
+			if (UAuraAbilitySystemComponent* AuraASC = Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent))
+			{
+				AuraASC->AddCharacterAbilitiesFromSaveData(SaveData);
+			}
 			if (AAuraPlayerState* AuraPlayerState = Cast<AAuraPlayerState>(GetPlayerState()))
 			{
 				AuraPlayerState->SetLevel(SaveData->PlayerLevel);
@@ -254,6 +262,7 @@ void AAuraCharacter::SaveProgress_Implementation(const FName& CheckPointTag)
 		if (!HasAuthority()) return;
 		UAuraAbilitySystemComponent* AuraASC = Cast<UAuraAbilitySystemComponent>(GetAbilitySystemComponent());
 		FForEachAbility SaveAbilityDelegate;
+		SaveData->SaveAbilities.Empty();
 		SaveAbilityDelegate.BindLambda(
 			[this, AuraASC, &SaveData](const FGameplayAbilitySpec& AbilitySpec)
 			{
@@ -270,7 +279,7 @@ void AAuraCharacter::SaveProgress_Implementation(const FName& CheckPointTag)
 				SaveAbility.AbilityLevel = AbilitySpec.Level;
 				SaveAbility.AbilityType = Info.AbilityType;
 
-				SaveData->SaveAbilities.Add(SaveAbility);
+				SaveData->SaveAbilities.AddUnique(SaveAbility);
 			});
 		AuraASC->ForEachAbility(SaveAbilityDelegate);
 		
@@ -343,7 +352,7 @@ void AAuraCharacter::InitAbilityActorInfo()
 			AuraHUD->InitOverlay(AuraPlayerController, AuraPlayerState, AbilitySystemComponent, AttributeSet);
 		}
 	}
-	LoadProgress();
+	
 	// InitializeDefaultAttributes();
 }
 

@@ -10,7 +10,6 @@
 #include "Engine/OverlapResult.h"
 #include "Game/AuraGameModeBase.h"
 #include "Game/LoadScreenSaveGame.h"
-#include "GeometryCollection/GeometryCollectionParticlesData.h"
 #include "Interaction/CombatInterface.h"
 #include "Kismet/GameplayStatics.h"
 #include "Player/AuraPlayerState.h"
