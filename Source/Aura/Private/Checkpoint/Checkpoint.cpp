@@ -2,8 +2,6 @@
 
 
 #include "Checkpoint/Checkpoint.h"
-
-#include "Components/BoxComponent.h"
 #include "Components/SphereComponent.h"
 #include "Game/AuraGameModeBase.h"
 #include "Interaction/PlayerInterface.h"
@@ -18,11 +16,18 @@ ACheckpoint::ACheckpoint(const FObjectInitializer& ObjectInitializer) : Super(Ob
 	CheckPointMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 	CheckPointMesh->SetCollisionResponseToAllChannels(ECR_Block);
 
+	CheckPointMesh->SetCustomDepthStencilValue(CustomDepthStencilOverride);
+	CheckPointMesh->MarkRenderStateDirty();
+	
 	Sphere = CreateDefaultSubobject<USphereComponent>(FName("Sphere"));
 	Sphere->SetupAttachment(CheckPointMesh);
 	Sphere->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 	Sphere->SetCollisionResponseToAllChannels(ECR_Ignore);
 	Sphere->SetCollisionResponseToChannel(ECC_Pawn, ECR_Overlap);
+
+	MoveToComponent = CreateDefaultSubobject<USceneComponent>(FName("MoveToComponent"));
+	MoveToComponent->SetupAttachment(GetRootComponent());
+	
 }
 
 void ACheckpoint::LoadActor_Implementation()
@@ -35,6 +40,21 @@ void ACheckpoint::LoadActor_Implementation()
 		CheckPointMesh->SetMaterial(0, DynamicMaterialInstance);
 		CheckPointReached(DynamicMaterialInstance);
 	}
+}
+
+void ACheckpoint::HighlightActor_Implementation()
+{
+	CheckPointMesh->SetRenderCustomDepth(true);
+}
+
+void ACheckpoint::UnHighlightActor_Implementation()
+{
+	CheckPointMesh->SetRenderCustomDepth(false);
+}
+
+void ACheckpoint::SetMoveToLocation_Implementation(FVector& OutDestination)
+{
+	OutDestination = MoveToComponent->GetComponentLocation();
 }
 
 void ACheckpoint::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
@@ -58,7 +78,12 @@ void ACheckpoint::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AAct
 void ACheckpoint::BeginPlay()
 {
 	Super::BeginPlay();
-	Sphere->OnComponentBeginOverlap.AddDynamic(this, &ACheckpoint::OnSphereOverlap);
+
+	if (bCallOverlapCallback)
+	{
+		Sphere->OnComponentBeginOverlap.AddDynamic(this, &ACheckpoint::OnSphereOverlap);
+	}
+	
 }
 
 void ACheckpoint::HandleGlowEffects()

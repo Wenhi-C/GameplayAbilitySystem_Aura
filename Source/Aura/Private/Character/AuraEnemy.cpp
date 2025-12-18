@@ -37,6 +37,11 @@ AAuraEnemy::AAuraEnemy()
 	GetCharacterMovement()->bUseControllerDesiredRotation = true;
 
 	BaseWalkSpeed = 250.f;
+
+	GetMesh()->SetCustomDepthStencilValue(CUSTOM_DEPTH_RED);
+	GetMesh()->MarkRenderStateDirty();
+	Weapon->SetCustomDepthStencilValue(CUSTOM_DEPTH_RED);
+	Weapon->MarkRenderStateDirty();
 }
 
 void AAuraEnemy::PossessedBy(AController* NewController)
@@ -51,22 +56,20 @@ void AAuraEnemy::PossessedBy(AController* NewController)
 	AuraAIController->GetBlackboardComponent()->SetValueAsBool(FName("RangedAttacker"), CharacterClass != ECharacterClass::Warrior);
 }
 
-void AAuraEnemy::HighlightActor()
+void AAuraEnemy::HighlightActor_Implementation()
 {
 	if (GetMesh())
 	{
 		GetMesh()->SetRenderCustomDepth(true);
-		GetMesh()->SetCustomDepthStencilValue(CUSTOM_DEPTH_RED);
 	}
     
 	if (Weapon)
 	{
 		Weapon->SetRenderCustomDepth(true);
-		Weapon->SetCustomDepthStencilValue(CUSTOM_DEPTH_RED);
 	}
 }
 
-void AAuraEnemy::UnHighlightActor()
+void AAuraEnemy::UnHighlightActor_Implementation()
 {
 	if (GetMesh())
 	{
@@ -78,6 +81,11 @@ void AAuraEnemy::UnHighlightActor()
 		Weapon->SetRenderCustomDepth(false);
 	}
 	
+}
+
+void AAuraEnemy::SetMoveToLocation_Implementation(FVector& OutDestination)
+{
+	// Do not change OutDestination
 }
 
 int32 AAuraEnemy::GetPlayerLevel_Implementation()
