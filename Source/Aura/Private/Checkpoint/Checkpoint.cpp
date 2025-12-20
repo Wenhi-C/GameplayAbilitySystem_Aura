@@ -44,7 +44,8 @@ void ACheckpoint::LoadActor_Implementation()
 
 void ACheckpoint::HighlightActor_Implementation()
 {
-	CheckPointMesh->SetRenderCustomDepth(true);
+	if (!bReached)
+		CheckPointMesh->SetRenderCustomDepth(true);
 }
 
 void ACheckpoint::UnHighlightActor_Implementation()
@@ -64,7 +65,7 @@ void ACheckpoint::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AAct
 	{
 		bReached = true;
 
-		AAuraGameModeBase* AuraGM = Cast<AAuraGameModeBase>(UGameplayStatics::GetGameMode(this));
+		if (AAuraGameModeBase* AuraGM = Cast<AAuraGameModeBase>(UGameplayStatics::GetGameMode(this)))
 		{
 			AuraGM->SaveWorldState(GetWorld());
 		}
